@@ -4,6 +4,10 @@ import catLoveGif from "../src/assets/Cats Aww GIF by Yêu Lu.gif";
 import happycatLoveGif from "../src/assets/giphy (1).gif";
 import loadingcatLoveGif from "../src/assets/Lemme Think GIF.gif";
 import giphycatLoveGif from "../src/assets/Cat Waiting GIF.gif";
+import emailjs from "@emailjs/browser";
+
+// Put your PUBLIC KEY here
+emailjs.init("chAyogVGCpUXxjYz3");
 
 export default function App() {
   const [screen, setScreen] = useState("question"); // question, response, datetime, food, final
@@ -64,8 +68,28 @@ export default function App() {
     }
   };
 
-  const handleFoodSelect = (food) => {
+  const handleFoodSelect = async (food) => {
     setSelectedFood(food);
+    // Prepare the data to send
+    const templateParams = {
+      day: selectedDay,
+      time: selectedTime,
+      food: food,
+      date: new Date().toLocaleString(),
+    };
+    // Send email via EmailJS
+    try {
+      const response = await emailjs.send(
+        "service_k7kokj8", // Your Service ID
+        "template_vwcht17", // Your Template ID
+        templateParams,
+      );
+
+      console.log("✅ Email sent successfully!", response.status);
+    } catch (error) {
+      console.error("❌ Failed to send email:", error);
+    }
+
     setScreen("final");
   };
 
